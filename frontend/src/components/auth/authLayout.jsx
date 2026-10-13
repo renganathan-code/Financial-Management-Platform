@@ -50,12 +50,8 @@ function AuthLayout({ children, title, subtitle }) {
               </div>
 
               <div>
-                <h1 className="text-xl font-bold tracking-tight">
-                  Finora
-                </h1>
-                <p className="text-xs text-white/60">
-                  Financial Management
-                </p>
+                <h1 className="text-xl font-bold tracking-tight">Finora</h1>
+                <p className="text-xs text-white/60">Financial Management</p>
               </div>
             </div>
 
@@ -99,9 +95,7 @@ function AuthLayout({ children, title, subtitle }) {
                 </div>
 
                 <div>
-                  <p className="text-sm font-semibold">
-                    Secure financial data
-                  </p>
+                  <p className="text-sm font-semibold">Secure financial data</p>
 
                   <p className="mt-1 text-xs text-white/55">
                     Keep your business information protected.

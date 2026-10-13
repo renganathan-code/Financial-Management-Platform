@@ -1,28 +1,23 @@
 import { useState } from "react";
-import {
-  Building2,
-  ArrowRight,
-  Eye,
-  EyeOff,
-  LockKeyhole,
-  Mail,
-  User,
-} from "lucide-react";
+import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import AuthLayout from "../../components/auth/authLayout";
+import { registerUser } from "../../services/authService"
 
 function Register() {
-
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     password: "",
     confirmPassword: "",
-    companyname:"",
   });
 
   const [showPassword, setShowPassword] = useState(true);
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("")
+  const [successMessage, setSuccessMessage] = useState("")
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -33,21 +28,37 @@ function Register() {
     }));
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match.");
-      return;
-    }
+  setError("");
+  setSuccessMessage("");
 
-    console.log("Register Data:", formData);
+  if (formData.password !== formData.confirmPassword) {
+    setError("Passwords do not match");
+    return;
+  }
 
-    // Backend API will be connected here later.
+  try {
+    setLoading(true);
 
-    // Temporary navigation
-    // navigate("/login");
-  };
+    const data = await registerUser({
+      fullName: formData.fullName,
+      email: formData.email,
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
+    });
+
+    setSuccessMessage(data.message);
+  } catch (error) {
+    setError(
+      error.response?.data?.message ||
+        "Registration failed. Please try again."
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <AuthLayout
@@ -223,11 +234,7 @@ function Register() {
               "
               aria-label={showPassword ? "hide password" : "show password"}
             >
-              {showPassword ? (
-                <EyeOff size={18} />
-              ) : (
-                <Eye size={18} />
-              )}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
         </div>
@@ -284,9 +291,7 @@ function Register() {
 
             <button
               type="button"
-              onClick={() =>
-                setShowConfirmPassword((previous) => !previous)
-              }
+              onClick={() => setShowConfirmPassword((previous) => !previous)}
               className="
                 absolute
                 right-3
@@ -299,70 +304,25 @@ function Register() {
                 hover:text-primary
               "
               aria-label={
-                showConfirmPassword
-                  ? "Hide password"
-                  : "Show password"
+                showConfirmPassword ? "Hide password" : "Show password"
               }
             >
-              {showConfirmPassword ? (
-                <EyeOff size={18} />
-              ) : (
-                <Eye size={18} />
-              )}
+              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
         </div>
 
-         {/* Company Name */}
-        <div>
-          <label
-            htmlFor="companyName"
-            className="mb-2 block text-sm font-semibold text-text-dark"
-          >
-            company name
-          </label>
+        {error && (
+  <p className="text-sm text-red-500">
+    {error}
+  </p>
+)}
 
-          <div className="relative">
-            <Building2
-              size={18}
-              className="
-                pointer-events-none
-                absolute
-                left-4
-                top-1/2
-                -translate-y-1/2
-                text-text-muted
-              "
-            />
-
-            <input
-              id="companyName"
-              type="text"
-              name="companyName"
-              value={formData.companyname}
-              onChange={handleChange}
-              placeholder="Enter your company name"
-              autoComplete="name"
-              required
-              className="
-                w-full
-                rounded-xl
-                border
-                border-border
-                bg-white
-                py-3.5
-                pl-11
-                pr-4
-                text-sm
-                outline-none
-                placeholder:text-gray-400
-                focus:border-primary
-                focus:ring-4
-                focus:ring-primary/10
-              "
-            />
-          </div>
-        </div>
+{successMessage && (
+  <p className="text-sm text-green-600">
+    {successMessage}
+  </p>
+)}
 
         {/* Terms */}
         <div className="flex items-start gap-2">
@@ -381,6 +341,7 @@ function Register() {
         {/* Submit */}
         <button
           type="submit"
+          disabled={loading}
           className="
             group
             flex
@@ -395,14 +356,14 @@ function Register() {
             text-sm
             font-semibold
             text-white
+            cursor-pointer
             shadow-lg
             shadow-primary/15
             hover:bg-primary-light
             active:scale-[0.99]
           "
         >
-          Create account
-
+          {loading ? "Creating account...": "Create account"}
           <ArrowRight
             size={17}
             className="transition-transform group-hover:translate-x-1"

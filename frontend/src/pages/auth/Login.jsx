@@ -1,16 +1,9 @@
 import { useState } from "react";
-import {
-  ArrowRight,
-  Eye,
-  EyeOff,
-  LockKeyhole,
-  Mail,
-} from "lucide-react";
+import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import AuthLayout from "../../components/auth/authLayout";
 
 function Login() {
-
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -169,29 +162,9 @@ function Login() {
               "
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
-              {showPassword ? (
-                <EyeOff size={18} />
-              ) : (
-                <Eye size={18} />
-              )}
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
-        </div>
-
-        {/* Remember */}
-        <div className="flex items-center gap-2">
-          <input
-            id="remember"
-            type="checkbox"
-            className="h-4 w-4 rounded border-border accent-[#2a0a38]"
-          />
-
-          <label
-            htmlFor="remember"
-            className="text-sm text-text-muted"
-          >
-            Remember me
-          </label>
         </div>
 
         {/* Submit */}
@@ -211,6 +184,7 @@ function Login() {
             text-sm
             font-semibold
             text-white
+            cursor-pointer
             shadow-lg
             shadow-primary/15
             hover:bg-primary-light
@@ -218,7 +192,6 @@ function Login() {
           "
         >
           Sign in
-
           <ArrowRight
             size={17}
             className="transition-transform group-hover:translate-x-1"
