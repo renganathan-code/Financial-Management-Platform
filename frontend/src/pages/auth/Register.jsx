@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail, User } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../components/auth/authLayout";
-import { registerUser } from "../../services/authService"
+import { registerUser } from "../../services/authService";
 
 function Register() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -16,8 +17,8 @@ function Register() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(true);
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("")
-  const [successMessage, setSuccessMessage] = useState("")
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -29,36 +30,38 @@ function Register() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  setError("");
-  setSuccessMessage("");
+    setError("");
+    setSuccessMessage("");
 
-  if (formData.password !== formData.confirmPassword) {
-    setError("Passwords do not match");
-    return;
-  }
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
 
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const data = await registerUser({
-      fullName: formData.fullName,
-      email: formData.email,
-      password: formData.password,
-      confirmPassword: formData.confirmPassword,
-    });
+      const data = await registerUser({
+        fullName: formData.fullName,
+        email: formData.email,
+        password: formData.password,
+        confirmPassword: formData.confirmPassword,
+      });
 
-    setSuccessMessage(data.message);
-  } catch (error) {
-    setError(
-      error.response?.data?.message ||
-        "Registration failed. Please try again."
-    );
-  } finally {
-    setLoading(false);
-  }
-};
+      setSuccessMessage(data.message);
+      alert("registration is successfully completed")
+      navigate("/login");
+    } catch (error) {
+      setError(
+        error.response?.data?.message ||
+          "Registration failed. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <AuthLayout
@@ -312,17 +315,11 @@ function Register() {
           </div>
         </div>
 
-        {error && (
-  <p className="text-sm text-red-500">
-    {error}
-  </p>
-)}
+        {error && <p className="text-sm text-red-500">{error}</p>}
 
-{successMessage && (
-  <p className="text-sm text-green-600">
-    {successMessage}
-  </p>
-)}
+        {successMessage && (
+          <p className="text-sm text-green-600">{successMessage}</p>
+        )}
 
         {/* Terms */}
         <div className="flex items-start gap-2">
@@ -363,7 +360,7 @@ function Register() {
             active:scale-[0.99]
           "
         >
-          {loading ? "Creating account...": "Create account"}
+          {loading ? "Creating account..." : "Create account"}
           <ArrowRight
             size={17}
             className="transition-transform group-hover:translate-x-1"

@@ -1,15 +1,21 @@
 import { useState } from "react";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../components/auth/authLayout";
+import {loginUser} from "../../services/authService"
 
 function Login() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
   const [showPassword, setShowPassword] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -20,15 +26,31 @@ function Login() {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     console.log("Login Data:", formData);
 
-    // Backend API will be connected here later.
+    setError("");
 
-    // Temporary navigation
-    // navigate("/dashboard");
+    try {
+      setLoading(true);
+
+      const data = await loginUser({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      localStorage.setItem("token", data.token);
+
+      navigate("/dashboard")
+    } catch (error) {
+      setError(
+        error.response?.data?.message || "Login failed. please try again",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -167,9 +189,12 @@ function Login() {
           </div>
         </div>
 
+        {error && <p className="text-sm text-red-500">{error}</p>}
+
         {/* Submit */}
         <button
           type="submit"
+          disabled={loading}
           className="
             group
             flex
@@ -191,7 +216,7 @@ function Login() {
             active:scale-[0.99]
           "
         >
-          Sign in
+          {loading? "Signing in..." : "Sign in"}
           <ArrowRight
             size={17}
             className="transition-transform group-hover:translate-x-1"
