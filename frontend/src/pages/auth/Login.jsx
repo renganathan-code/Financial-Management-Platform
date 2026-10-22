@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ArrowRight, Eye, EyeOff, LockKeyhole, Mail } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../components/auth/authLayout";
-import {loginUser} from "../../services/authService"
+import { loginUser } from "../../services/authService";
 
 function Login() {
   const navigate = useNavigate();
@@ -42,8 +42,9 @@ function Login() {
       });
 
       localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
 
-      navigate("/dashboard")
+      navigate("/dashboard");
     } catch (error) {
       setError(
         error.response?.data?.message || "Login failed. please try again",
@@ -216,7 +217,7 @@ function Login() {
             active:scale-[0.99]
           "
         >
-          {loading? "Signing in..." : "Sign in"}
+          {loading ? "Signing in..." : "Sign in"}
           <ArrowRight
             size={17}
             className="transition-transform group-hover:translate-x-1"

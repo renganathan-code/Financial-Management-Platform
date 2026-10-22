@@ -51,8 +51,11 @@ function Register() {
       });
 
       setSuccessMessage(data.message);
-      alert("registration is successfully completed")
-      navigate("/login");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+      
     } catch (error) {
       setError(
         error.response?.data?.message ||
@@ -64,6 +67,18 @@ function Register() {
   };
 
   return (
+    <>
+    { successMessage && (
+      <div className="fixed right-10 top-5 z-50 flex items-center gap-3 rounded-lg border border-green-400 bg-white px-4 py-4 shadow-lg ">
+      <div className="flex h-8 w-8 items-center justify-center font-bold rounded-full bg-green-100 text-green-700 text-lg">
+       ✓
+      </div>
+      <div>
+        <p className="text-sm font-semibold text-gray-900">Registration Successful</p>
+        <p className="text-xs text-gray-500">Redirecting to login...</p>
+      </div>
+      </div>
+    )}
     <AuthLayout
       title="Create your account"
       subtitle="Set up your account and start managing your business finances."
@@ -313,13 +328,17 @@ function Register() {
               {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           </div>
+
+          <div>
+            
+          </div>
         </div>
 
         {error && <p className="text-sm text-red-500">{error}</p>}
 
-        {successMessage && (
+        {/* {successMessage && (
           <p className="text-sm text-green-600">{successMessage}</p>
-        )}
+        )} */}
 
         {/* Terms */}
         <div className="flex items-start gap-2">
@@ -381,6 +400,7 @@ function Register() {
         </p>
       </div>
     </AuthLayout>
+    </>
   );
 }
 

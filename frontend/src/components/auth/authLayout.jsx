@@ -50,7 +50,7 @@ function AuthLayout({ children, title, subtitle }) {
               </div>
 
               <div>
-                <h1 className="text-xl font-bold tracking-tight">Finora</h1>
+                <h1 className="text-xl font-bold tracking-tight">Business 360</h1>
                 <p className="text-xs text-white/60">Financial Management</p>
               </div>
             </div>
@@ -107,7 +107,7 @@ function AuthLayout({ children, title, subtitle }) {
 
           {/* Footer */}
           <div className="relative z-10 mt-10 flex items-center justify-between text-xs text-white/45">
-            <span>© 2026 Finora</span>
+            <span>© 2026 Business 360</span>
 
             <div className="flex items-center gap-1">
               Simple. Secure. Smart.
@@ -132,7 +132,7 @@ function AuthLayout({ children, title, subtitle }) {
           <div className="auth-card w-full max-w-md">
             <div className="mb-8">
               <p className="mb-2 text-sm font-medium text-primary-light">
-                Welcome to Finora
+                Welcome to Business 360
               </p>
 
               <h2 className="auth-title text-3xl font-bold tracking-tight text-text-dark">

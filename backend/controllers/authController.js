@@ -34,11 +34,17 @@ const registerUser = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    //Role assign
+    const userCount = await User.countDocuments();
+
+    const role = userCount === 0 ? "admin" : "user";
+
     // Create user
     const user = await User.create({
       fullName: fullName.trim(),
       email: email.trim().toLowerCase(),
       password: hashedPassword,
+      role,
     });
 
     // Send response
@@ -100,6 +106,7 @@ const loginUser = async (req, res) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        role: user.role,
       },
     });
   } catch (error) {

@@ -3,6 +3,8 @@ import { Route, Routes } from "react-router-dom";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
+import RoleProtectedRoute from "./components/role/RoleProtectedRoute";
+import AdminDashboard from "./pages/dashboard/AdminDashboard";
 
 function App() {
   return (
@@ -14,7 +16,23 @@ function App() {
 
         <Route path="/register" element={<Register />} />
 
-        <Route path="/dashboard" element={<Dashboard />}></Route>
+        <Route
+          path="/admin"
+          element={
+            <RoleProtectedRoute allowedRoles={["admin"]}>
+              <AdminDashboard/>
+            </RoleProtectedRoute>
+          }
+        ></Route>
+
+        <Route
+          path="/dashboard"
+          element={
+            <RoleProtectedRoute allowedRoles={["admin", "user"]}>
+              <Dashboard />
+            </RoleProtectedRoute>
+          }
+        ></Route>
       </Routes>
     </>
   );
