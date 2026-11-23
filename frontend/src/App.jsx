@@ -4,7 +4,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
 import RoleProtectedRoute from "./components/role/RoleProtectedRoute";
-import AdminDashboard from "./pages/dashboard/AdminDashboard";
+import SuperAdminDashboard from "./pages/dashboard/superAdminDashboard";
 
 function App() {
   return (
@@ -17,10 +17,10 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         <Route
-          path="/admin"
+          path="/superadmin"
           element={
-            <RoleProtectedRoute allowedRoles={["admin"]}>
-              <AdminDashboard/>
+            <RoleProtectedRoute allowedRoles={["superadmin"]}>
+              <SuperAdminDashboard/>
             </RoleProtectedRoute>
           }
         ></Route>

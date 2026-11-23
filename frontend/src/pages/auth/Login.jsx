@@ -41,10 +41,16 @@ function Login() {
         password: formData.password,
       });
 
-      localStorage.setItem("token", data.token);
+      const { token, user } = data;
+
+      localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      navigate("/dashboard");
+      if (user.role === "superadmin") {
+        navigate("/superadmin");
+      } else {
+        navigate("/dashboard");
+      }
     } catch (error) {
       setError(
         error.response?.data?.message || "Login failed. please try again",

@@ -4,14 +4,17 @@ const connectDB = require("./config/db");
 require("dotenv").config();
 const authRoutes = require("./routes/authRoutes");
 const protect = require("./middleware/authMiddleware");
-const rbacRoutes = require("./routes/rbacRoutes")
+const rbacRoutes = require("./routes/rbacRoutes");
+const seedSuperAdmin = require("./config/seedSuperAdmin");
+const superAdminRoutes = require("./routes/superAdminRoute");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
-app.use("/api/rbac", rbacRoutes)
+app.use("/api/rbac", rbacRoutes);
+app.use("/api/superadmin", superAdminRoutes);
 
 app.get("/api/health", (req, res) => {
   res.status(200).json({
@@ -31,6 +34,7 @@ app.get("/api/protceted", protect, (req, res) => {
 const startServer = async () => {
   try {
     await connectDB();
+    await seedSuperAdmin();
 
     const PORT = process.env.PORT || 5000;
 

@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const registerUser = async (req, res) => {
   try {
-    const { fullName, email, password, confirmPassword } = req.body;
+    const { fullName, email, password, confirmPassword, requestedRole } = req.body;
 
     // Check required fields
     if (!fullName || !email || !password || !confirmPassword) {
@@ -31,20 +31,26 @@ const registerUser = async (req, res) => {
       });
     }
 
+    //Select role
+    const selectedRole = requestedRole || "user";
+
+    if (!["admin", "user"].includes(selectedRole)) {
+      return res.status(400).json({
+        message: "Invalid requested role",
+      });
+    }
+
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-
-    //Role assign
-    const userCount = await User.countDocuments();
-
-    const role = userCount === 0 ? "admin" : "user";
 
     // Create user
     const user = await User.create({
       fullName: fullName.trim(),
       email: email.trim().toLowerCase(),
       password: hashedPassword,
-      role,
+      role: "user",
+      requestedRole,
+      status: "pending",
     });
 
     // Send response
@@ -92,6 +98,17 @@ const loginUser = async (req, res) => {
       return res.status(401).json({
         message: "invalid email or password",
       });
+    }
+
+    if(user.role !== "superadmin" && user.status !== "approved"){
+      const message = user.status === "rejected"
+      ? "Your registration was rejected. Please contact the Super Admin."
+      : "Your registration is pending Super Admin approval.";
+
+      return res.status(403).json({
+        message,
+        status: user.status || "pending",
+      })
     }
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
